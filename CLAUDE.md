@@ -17,15 +17,22 @@ The only endpoint. Called by the Godot game each turn.
 **Request body:**
 ```json
 {
-  "text": "The narrative text shown to the player"
+  "scenario": "Narrative text describing the current scene",
+  "dialog": [],
+  "choices": ["Choice A", "Choice B", "Choice C"]
 }
 ```
 
-**Response (current placeholder):**
+**Response (choices available):**
 ```json
-{
-  "status": "ok"
-}
+{ "pick": 2 }
+```
+`pick` is the zero-based index of the chosen option.
+
+**Response (no choices):**
+Logs an error to the console and returns:
+```json
+{ "status": "error", "message": "no choices" }
 ```
 
 ## Project structure
