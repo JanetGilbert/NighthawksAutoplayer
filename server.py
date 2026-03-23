@@ -1,6 +1,6 @@
 import json
-import random
 from flask import Flask, request, jsonify
+import llm
 
 app = Flask(__name__)
 
@@ -13,11 +13,14 @@ def decide():
     choices = data.get("choices", [])
     if len(choices) == 0:
         print("ERROR: No choices available")
-        return jsonify({"status": "error", "message": "no choices"})
+        return jsonify({"result": -1})
 
-    pick = random.randrange(len(choices))
-    print("pick:"+str(pick))
-    return jsonify({"result": pick})
+    pick, justification = llm.decide(
+        scenario=data.get("scenario", ""),
+        dialog=data.get("dialog", []),
+        choices=choices,
+    )
+    return jsonify({"result": pick, "justification": justification})
 
 
 if __name__ == "__main__":

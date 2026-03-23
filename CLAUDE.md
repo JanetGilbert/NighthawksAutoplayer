@@ -38,6 +38,7 @@ Logs an error to the console and returns:
 ## Project structure
 ```
 server.py           # Flask server, entry point
+llm.py              # LLM integration (Ollama / qwen3:8b via OpenAI-compatible API)
 requirements.txt    # Python dependencies
 ```
 
