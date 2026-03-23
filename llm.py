@@ -1,4 +1,5 @@
 import json
+import random
 from openai import OpenAI
 
 client = OpenAI(
@@ -6,14 +7,11 @@ client = OpenAI(
     api_key="ollama",  # required by the client but unused by Ollama
 )
 
-MODEL = "qwen3:8b"
+#MODEL = "qwen3:8b"
+MODEL = "phi4-mini"
 
-SYSTEM_PROMPT = """You are playing a vampire visual novel called Nighthawks.
-You will be given the current scenario, any recent dialog, and a list of choices.
-Respond with a JSON object in this exact format: {"index": <number>, "justification": "<reasoning>"}
-where <number> is the zero-based index of the choice you want to make,
-and <reasoning> is a brief explanation of why you made that choice.
-Do not include any other text or explanation."""
+with open("system_prompt.txt", "r") as f:
+    SYSTEM_PROMPT = f.read()
 
 
 def decide(scenario: str, dialog: list, choices: list) -> int:
@@ -21,8 +19,12 @@ def decide(scenario: str, dialog: list, choices: list) -> int:
 
 Dialog: {json.dumps(dialog)}
 
+ChoiceMaximum: {len(choices) - 1}
+
 Choices:
-{chr(10).join(f"{i}: {c}" for i, c in enumerate(choices))}"""
+{chr(10).join(f"index {i}: {c}" for i, c in enumerate(choices))}"""
+    
+    print(user_message)
 
     response = client.chat.completions.create(
         model=MODEL,
@@ -36,6 +38,12 @@ Choices:
     result = json.loads(response.choices[0].message.content)
     index = int(result["index"])
     justification = result.get("justification", "")
+
+    if index < 0 or index >= len(choices):
+        print(f"ERROR: LLM returned out-of-range index {index} (valid: 0-{len(choices)-1}), defaulting to 0")
+        index = random.randint(0, len(choices)-1)
+        justification="Random override"
+
     print(f"LLM chose index {index}: {choices[index]}")
     print(f"Justification: {justification}")
     return index, justification

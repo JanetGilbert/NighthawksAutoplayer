@@ -1,6 +1,9 @@
 import json
+import sys
 from flask import Flask, request, jsonify
 import llm
+
+sys.stdout.reconfigure(line_buffering=True)
 
 app = Flask(__name__)
 
