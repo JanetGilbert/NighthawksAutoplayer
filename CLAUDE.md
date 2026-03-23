@@ -35,10 +35,17 @@ Logs an error to the console and returns:
 { "status": "error", "message": "no choices" }
 ```
 
+## Choice memory
+- The server keeps an in-memory list of the last 30 choices (by text, not index)
+- This history is included in the LLM prompt so it favors unexplored options
+- History resets on server restart
+- Single-choice turns (handled before calling the LLM) are not recorded
+
 ## Project structure
 ```
 server.py           # Flask server, entry point
 llm.py              # LLM integration (Ollama / qwen3:8b via OpenAI-compatible API)
+system_prompt.txt   # LLM system prompt (loaded at startup)
 requirements.txt    # Python dependencies
 ```
 

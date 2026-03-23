@@ -13,17 +13,26 @@ MODEL = "phi4-mini"
 with open("system_prompt.txt", "r") as f:
     SYSTEM_PROMPT = f.read()
 
+choice_history: list[str] = []
+
 
 def decide(scenario: str, dialog: list, choices: list) -> int:
+    history_section = ""
+    if choice_history:
+        history_section = f"""
+Recent choices (last {len(choice_history)}, oldest first):
+{chr(10).join(f"- {c}" for c in choice_history)}
+
+"""
+
     user_message = f"""Scenario: {scenario}
 
 Dialog: {json.dumps(dialog)}
-
-ChoiceMaximum: {len(choices) - 1}
+{history_section}ChoiceMaximum: {len(choices) - 1}
 
 Choices:
 {chr(10).join(f"index {i}: {c}" for i, c in enumerate(choices))}"""
-    
+
     print(user_message)
 
     max_retries = 5
@@ -54,8 +63,16 @@ Choices:
 
         print(f"LLM chose index {index}: {choices[index]}")
         print(f"Justification: {justification}")
+        _record_choice(choices[index])
         return index, justification
 
     print(f"ERROR: LLM failed after {max_retries} attempts, picking randomly")
     index = random.randint(0, len(choices) - 1)
+    _record_choice(choices[index])
     return index, "Random override - LLM failed to return valid index"
+
+
+def _record_choice(choice_text: str):
+    choice_history.append(choice_text)
+    if len(choice_history) > 30:
+        del choice_history[:-30]
