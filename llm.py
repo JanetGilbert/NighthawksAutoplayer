@@ -26,24 +26,36 @@ Choices:
     
     print(user_message)
 
-    response = client.chat.completions.create(
-        model=MODEL,
-        response_format={"type": "json_object"},
-        messages=[
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": user_message},
-        ],
-    )
+    max_retries = 5
+    for attempt in range(max_retries):
+        response = client.chat.completions.create(
+            model=MODEL,
+            response_format={"type": "json_object"},
+            messages=[
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": user_message},
+            ],
+        )
 
-    result = json.loads(response.choices[0].message.content)
-    index = int(result["index"])
-    justification = result.get("justification", "")
+        raw = response.choices[0].message.content
+        print(f"LLM raw response (attempt {attempt + 1}): {raw}")
+        result = json.loads(raw)
 
-    if index < 0 or index >= len(choices):
-        print(f"ERROR: LLM returned out-of-range index {index} (valid: 0-{len(choices)-1}), defaulting to 0")
-        index = random.randint(0, len(choices)-1)
-        justification="Random override"
+        if "index" not in result:
+            print(f"ERROR: LLM response missing 'index' key, got: {result}")
+            continue
 
-    print(f"LLM chose index {index}: {choices[index]}")
-    print(f"Justification: {justification}")
-    return index, justification
+        index = int(result["index"])
+        justification = result.get("justification", "")
+
+        if index < 0 or index >= len(choices):
+            print(f"ERROR: LLM returned out-of-range index {index} (valid: 0-{len(choices)-1})")
+            continue
+
+        print(f"LLM chose index {index}: {choices[index]}")
+        print(f"Justification: {justification}")
+        return index, justification
+
+    print(f"ERROR: LLM failed after {max_retries} attempts, picking randomly")
+    index = random.randint(0, len(choices) - 1)
+    return index, "Random override - LLM failed to return valid index"

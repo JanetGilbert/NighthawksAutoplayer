@@ -17,7 +17,11 @@ def decide():
     if len(choices) == 0:
         print("ERROR: No choices available")
         return jsonify({"result": -1})
-
+    
+    if len(choices) == 1:
+        print("Single option")
+        return jsonify({"result": 0, "justification": "Only choice"})
+    
     pick, justification = llm.decide(
         scenario=data.get("scenario", ""),
         dialog=data.get("dialog", []),
