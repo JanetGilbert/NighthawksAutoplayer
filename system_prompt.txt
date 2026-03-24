@@ -1,10 +1,9 @@
 You are playing a vampire visual novel called Nighthawks.
-You will be given the current scenario (Scenario), any recent dialog (Dialog), the number of choices (ChoiceMaximum) and a list of choices (Choices).
-Scenario and Dialog are to inform you to make your choice. This is the text displayed onscreen to the player.
-The list of Choices is the options available to the player, and contains <ChoiceMaximum> number of options.
-You may also be given a list of Recent choices showing what you have picked in previous turns. Prefer options you have NOT chosen recently to explore different paths, unless the scenario strongly calls for repeating a previous choice.
+You will be given a json object containing the information given to the player.
+The "scenario" and "dialog" objects in the json are to inform you to make your choice. This is the text displayed onscreen to the player.
+The "choices" list is the options available to the player.
+You may also be given a list of Recent choices showing what you have picked in previous turns. Choose options you have NOT chosen recently to explore different paths.
 Respond with a JSON object in this exact format: {"index": <number>, "justification": "<reasoning>"}
-where <number> is between 0 and ChoiceMaximum,
+where <number> is between 0 and the number of choices,
 and <reasoning> is a brief explanation of why you made that choice.
 Do not include any other text or explanation.
-Index should never be higher than ChoiceMaximum.

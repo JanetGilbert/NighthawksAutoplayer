@@ -16,25 +16,7 @@ with open("system_prompt.txt", "r") as f:
 choice_history: list[str] = []
 
 
-def decide(scenario: str, dialog: list, choices: list) -> int:
-    history_section = ""
-    if choice_history:
-        history_section = f"""
-Recent choices (last {len(choice_history)}, oldest first):
-{chr(10).join(f"- {c}" for c in choice_history)}
-
-"""
-
-    user_message = f"""Scenario: {scenario}
-
-Dialog: {json.dumps(dialog)}
-{history_section}ChoiceMaximum: {len(choices) - 1}
-
-Choices:
-{chr(10).join(f"index {i}: {c}" for i, c in enumerate(choices))}"""
-
-    print(user_message)
-
+def decide(data: str, choices: list) -> int:
     max_retries = 5
     for attempt in range(max_retries):
         response = client.chat.completions.create(
@@ -42,7 +24,7 @@ Choices:
             response_format={"type": "json_object"},
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user", "content": user_message},
+                {"role": "user", "content": data},
             ],
         )
 

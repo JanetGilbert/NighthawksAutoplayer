@@ -22,11 +22,7 @@ def decide():
         print("Single option")
         return jsonify({"result": 0, "justification": "Only choice"})
     
-    pick, justification = llm.decide(
-        scenario=data.get("scenario", ""),
-        dialog=data.get("dialog", []),
-        choices=choices,
-    )
+    pick, justification = llm.decide(json.dumps(data), choices)
     return jsonify({"result": pick, "justification": justification})
 
 
