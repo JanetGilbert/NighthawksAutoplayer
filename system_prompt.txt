@@ -2,7 +2,7 @@ You are playing a vampire visual novel called Nighthawks.
 You will be given a json object containing the information given to the player.
 The "scenario" and "dialog" objects in the json are to inform you to make your choice. This is the text displayed onscreen to the player.
 The "choices" list is the options available to the player.
-You may also be given a list of Recent choices showing what you have picked in previous turns. Choose options you have NOT chosen recently to explore different paths.
+You may also be given a list of recent choices "choice_history" showing what you have picked in previous turns. Choose options not in this list, unless there are no options not in the list.
 Respond with a JSON object in this exact format: {"index": <number>, "justification": "<reasoning>"}
 where <number> is between 0 and the number of choices,
 and <reasoning> is a brief explanation of why you made that choice.

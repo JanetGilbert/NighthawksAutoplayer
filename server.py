@@ -11,7 +11,7 @@ app = Flask(__name__)
 @app.route("/decide", methods=["POST"])
 def decide():
     data = request.get_json()
-    print(json.dumps(data, indent=2))
+    #print(json.dumps(data, indent=2))
 
     choices = data.get("choices", [])
     if len(choices) == 0:
@@ -22,7 +22,7 @@ def decide():
         print("Single option")
         return jsonify({"result": 0, "justification": "Only choice"})
     
-    pick, justification = llm.decide(json.dumps(data), choices)
+    pick, justification = llm.decide(data, choices)
     return jsonify({"result": pick, "justification": justification})
 
 

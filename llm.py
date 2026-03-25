@@ -16,15 +16,18 @@ with open("system_prompt.txt", "r") as f:
 choice_history: list[str] = []
 
 
-def decide(data: str, choices: list) -> int:
+def decide(data, choices: list) -> int:
     max_retries = 5
+    data["choice_history"] = choice_history
+    print(json.dumps(data, indent=2))
+    
     for attempt in range(max_retries):
         response = client.chat.completions.create(
             model=MODEL,
             response_format={"type": "json_object"},
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user", "content": data},
+                {"role": "user", "content": json.dumps(data)},
             ],
         )
 
