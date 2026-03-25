@@ -14,6 +14,12 @@ if LLM_PROVIDER == "huggingface":
     HF_API_KEY = os.environ["HUGGINGFACE_API_KEY"]
     HF_CHAT_URL = "https://router.huggingface.co/v1/chat/completions"
     MODEL = os.getenv("HUGGINGFACE_INFERENCE", "Qwen/Qwen2.5-72B-Instruct")
+elif LLM_PROVIDER == "google":
+    client = OpenAI(
+        base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
+        api_key=os.environ["GOOGLE_AI_STUDIO_KEY"],
+    )
+    MODEL = os.getenv("GOOGLE_MODEL", "gemini-2.5-flash")
 else:
     client = OpenAI(
         base_url="http://localhost:11434/v1",
