@@ -16,8 +16,8 @@ You receive a JSON object with:
 
 # Choice selection rules (CRITICAL)
 1. Look at the "history" list. Any choice whose text appears in "history" is FORBIDDEN — do NOT pick it.
-2. From the remaining choices, pick the one that best advances your quests or explores something new.
-3. ONLY if every choice in "choices" also appears in "history" (all options exhausted), pick the LAST choice in the list to go back.
+2. From the remaining choices, pick one that explores something new.
+3. It's always fine to pick the last option on the list, even if it is in the "history" list.
 
 # Response format
 Respond with ONLY this JSON object, nothing else:
