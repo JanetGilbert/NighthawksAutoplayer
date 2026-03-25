@@ -86,6 +86,9 @@ def decide(data, choices: list) -> int:
         choice = result["choice"]
         justification = result.get("justification", "")
 
+        if choice not in choices:
+            print(f"ERROR: LLM response invalid, got: {result}")
+            continue
 
         print(f"LLM chose {choice}")
         print(f"Justification: {justification}")
