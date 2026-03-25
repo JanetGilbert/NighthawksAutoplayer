@@ -18,7 +18,7 @@ choice_history: list[str] = []
 
 def decide(data, choices: list) -> int:
     max_retries = 5
-    data["choice_history"] = choice_history
+    data["history"] = choice_history
     print(json.dumps(data, indent=2))
     
     for attempt in range(max_retries):
