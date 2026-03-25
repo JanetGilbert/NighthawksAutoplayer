@@ -79,26 +79,23 @@ def decide(data, choices: list) -> int:
             print(f"ERROR: LLM response is not valid JSON: {raw}")
             continue
 
-        if "index" not in result:
-            print(f"ERROR: LLM response missing 'index' key, got: {result}")
+        if "choice" not in result:
+            print(f"ERROR: LLM response missing 'choice', got: {result}")
             continue
 
-        index = int(result["index"])
+        choice = result["choice"]
         justification = result.get("justification", "")
 
-        if index < 0 or index >= len(choices):
-            print(f"ERROR: LLM returned out-of-range index {index} (valid: 0-{len(choices)-1})")
-            continue
 
-        print(f"LLM chose index {index}: {choices[index]}")
+        print(f"LLM chose {choice}")
         print(f"Justification: {justification}")
-        _record_choice(choices[index])
-        return index, justification
+        _record_choice(choice)
+        return choice, justification
 
     print(f"ERROR: LLM failed after {max_retries} attempts, picking randomly")
-    index = random.randint(0, len(choices) - 1)
-    _record_choice(choices[index])
-    return index, "Random override - LLM failed to return valid index"
+    choice = random.choice(choices)
+    _record_choice(choice)
+    return choice, "Random override - LLM failed to return valid option"
 
 
 def _record_choice(choice_text: str):

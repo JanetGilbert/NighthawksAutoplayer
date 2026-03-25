@@ -27,7 +27,7 @@ The only endpoint. Called by the Godot game each turn.
 ```json
 { "pick": 2 }
 ```
-`pick` is the zero-based index of the chosen option.
+`pick` is the chosen option.
 
 **Response (no choices):**
 Logs an error to the console and returns:

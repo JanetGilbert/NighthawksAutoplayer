@@ -20,7 +20,7 @@ def decide():
     
     if len(choices) == 1:
         print("Single option")
-        return jsonify({"result": 0, "justification": "Only choice"})
+        return jsonify({"result": choices[0], "justification": "Only choice"})
     
     pick, justification = llm.decide(data, choices)
     return jsonify({"result": pick, "justification": justification})
